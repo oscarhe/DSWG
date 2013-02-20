@@ -2,127 +2,62 @@
 <html>
 	<head>
 		<title>Beginner Lessons</title>
+		<!--<link rel="stylesheet" href="stylesheets/main.css" />-->
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script type=text/javascript>
-			// 2 dimensional array for dynamic image production
-			var beg_img_list = [["thermometer.jpg", "thermometer_2.jpg"], ["ruler.jpg"], ["measuring_cylinder.jpg", "measuring_cylinder_2.jpg", "measuring_cylinder_3.jpg", "measuring_cylinder_4.jpg"], ["stopwatch.jpg"], ["microscope.jpg", "microscope_2.jpg", "microscope_3.jpg"], ["beaker.jpg", "beaker_2.jpg"], ["syringe.jpg", "syringe_2.jpg", "syringe_3.jpg"], ["calculator.jpg"], ["spatula.jpg", "spatula_2.jpg", "spatula_3.jpg"], ["mortar_pestle.jpg", "mortar_pestle_2.jpg", "mortar_pestle_3.jpg"], ["beam_balance.jpg"]];
-			// Keeps track of which sub array to go into to load an image
-			var counter = 0;
-			// Flag used to see if end of lesson is reached
-			var beg_img_list_length = beg_img_list.length;
+			var begList = ["#thermometer", "#ruler", "#measuring_cylinder", "#stopwatch", "#microscope", "#beaker", "#syringe", "#calculator", "#spatula", "#mortar_pestle", "#filter_funnel", "#beam_balance"];
+			var ajaxLessonPath = "ajax/beginner_toac/begin_lessons.html";
+			var lessonIndex = 0;
+			var finishLessonFlag = false;
+			
 			$(document).ready(function() {
-				$('a#previous, a#next').hide();
-				$('a#start').click(function(event) {
-					event.preventDefault();
-					$(this).hide();
-					loadLesson(counter);
-					$('a#previous, a#next').show();
-				}); // End a#start click
-				
+				$('a#previous, a#game').hide();
+				loadLesson(lessonIndex);
 				$('a#next').click(function(event) {
+					$('a#previous').show();
 					event.preventDefault();
-					counter++;
-					loadLesson(counter);
-				}); // End a#next click
-				
+					lessonIndex++;
+					loadLesson(lessonIndex);
+				}); // end a#next click
 				$('a#previous').click(function(event) {
 					event.preventDefault();
-					counter--;
-					loadLesson(counter);
-				}); // End a#previous click
-			}); // End ready
+					lessonIndex--;
+					loadLesson(lessonIndex);
+				}); // end a#previous click
+			}); // end ready
 			
-			/*
-			* Function that loads the images, title, and recording
-			* Allows a maximum of 4 images
-			* For more images, alter this function and add file to array, beg_img_list
-			*/
-			function loadLesson(counter) {
-				$('.image1, .image2, .image3, .image4').hide();
-				var img_count = beg_img_list[counter].length;
-				var img_path = 'images/beginner_toac/';
-				if (img_count == 1) {
-					var s_source = beg_img_list[counter][0];
-					$('div.equip_name').text(beg_img_list[counter][0].toUpperCase().substr(0, beg_img_list[counter][0].lastIndexOf('.')).replace(/_/g, " "));
-					$('img.image1').attr({
-						src: img_path + s_source,
-						alt: s_source
-					}).fadeIn(500);
+			function loadLesson(lessonIndex) {
+				$('a#previous, a#game, a#next').show();
+				if (lessonIndex == 0 && finishLessonFlag == false) {
+					$('a#previous, a#game').hide();
+				} else if (lessonIndex == begList.length - 1) {
+					finishLessonFlag = true;
+					$('a#next').hide();
+				} else {
+					if (finishLessonFlag == false)
+						$('a#game').hide();
 				}
-				else if(img_count == 2) {
-					var s_source1 = beg_img_list[counter][0];
-					var s_source2 = beg_img_list[counter][1];
-					$('div.equip_name').text(beg_img_list[counter][0].toUpperCase().substr(0, beg_img_list[counter][0].lastIndexOf('.')).replace(/_/g, " "));
-					$('img.image1').attr({
-						src: img_path + s_source1,
-						alt: s_source1
-					});
-					$('img.image2').attr({
-						src: img_path + s_source2,
-						alt: s_source2
-					});
-					$('.image1, .image2').fadeIn(500);
-				}
-				else if(img_count == 3) {
-					var s_source1 = beg_img_list[counter][0];
-					var s_source2 = beg_img_list[counter][1];
-					var s_source3 = beg_img_list[counter][2];
-					$('div.equip_name').text(beg_img_list[counter][0].toUpperCase().substr(0, beg_img_list[counter][0].lastIndexOf('.')).replace(/_/g, " "));
-					$('img.image1').attr({
-						src: img_path + s_source1,
-						alt: s_source1
-					});
-					$('img.image2').attr({
-						src: img_path + s_source2,
-						alt: s_source2
-					});
-					$('img.image3').attr({
-						src: img_path + s_source3,
-						alt: s_source3
-					});
-					$('.image1, .image2, .image3').fadeIn(500);
-				}
-				else {
-					var s_source1 = beg_img_list[counter][0];
-					var s_source2 = beg_img_list[counter][1];
-					var s_source3 = beg_img_list[counter][2];
-					var s_source4 = beg_img_list[counter][3];
-					$('div.equip_name').text(beg_img_list[counter][0].toUpperCase().substr(0, beg_img_list[counter][0].lastIndexOf('.')).replace(/_/g, " "));
-					$('img.image1').attr({
-						src: img_path + s_source1,
-						alt: s_source1
-					});
-					$('img.image2').attr({
-						src: img_path + s_source2,
-						alt: s_source2
-					});
-					$('img.image3').attr({
-						src: img_path + s_source3,
-						alt: s_source3
-					});	
-					$('img.image4').attr({
-						src: img_path + s_source4,
-						alt: s_source4
-					});						
-					$('.image1, .image2, .image3, .image4').fadeIn(500);
-				}
+				$('div#lesson_section').load(ajaxLessonPath + " " + begList[lessonIndex], null, function() {
+					$('div' + begList[lessonIndex] + ' .audio').trigger('play');
+					$('a.sounds').click(function(event) {
+						event.preventDefault();
+						$('.audio').trigger('play');
+					})
+				});
 			}
 		</script>
 	</head>
 	
 	<body>
-		<a id="start" href="">Start</a>
-		<div id="lesson_section">
-			<div class="equip_name"></div>
-			<span>sounds</span>
-			<img class="image1" src="" alt="" style="display: none" />
-			<img class="image2" src="" alt="" style="display: none" />
-			<img class="image3" src="" alt="" style="display: none" />
-			<img class="image4" src="" alt="" style="display: none" />
-		</div>
-		<div id="prev_next">
-		<a id="previous" href="">Previous</a>
-		<a id="next" href="">Next</a>
+		<div id="wrapper">
+			<div id="lesson_section">
+
+			</div>
+			<div id="lesson_nav">
+				<a id="previous" href="#">Previous</a>
+				<a id="next" href="#">Next</a>
+				<a id="game" href="beginner_game.html">Game</a>
+			</div>
 		</div>
 	</body>
 </html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Beginner Game</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<script type="text/javascript">
+			var begGameList = ["#thermometer", "#ruler", "#measuring_cylinder", "#stopwatch", "#microscope", "#beaker", "#syringe", "#calculator", "#spatula", "#mortar_pestle", "#filter_funnel", "#beam_balance"];
+			var ajaxGamePath = "ajax/beginner_toac/begin_games.html";
+			var gameIndex = 0;
+			var finishGameFlag = false;
+			
+			$(document).ready(function() {
+				$('a#previous, a#next_lesson').hide();
+				loadGame(gameIndex);
+				$('a#next').click(function(event) {
+					$('a#previous').show();
+					event.preventDefault();
+					gameIndex++;
+					loadGame(gameIndex);
+				}); // end a#next click
+				$('a#previous').click(function(event) {
+					event.preventDefault();
+					gameIndex--;
+					loadGame(gameIndex);
+				}); // end a#previous click
+			});
+			
+			function loadGame(gameIndex) {
+				$('a#previous, a#next_lesson, a#next').show();
+				if (gameIndex == 0 && finishGameFlag == false) {
+					$('a#previous, a#next_lesson').hide();
+				} else if (gameIndex == begGameList.length - 1) {
+					finishGameFlag = true;
+					$('a#next').hide();
+				} else {
+					if (finishGameFlag == false)
+						$('a#next_lesson').hide();
+				}
+				$('div#game_section').load(ajaxGamePath + " " + begGameList[gameIndex], null, function() {
+					$('div' + begGameList[gameIndex] + ' .audio').trigger('play');
+					$('a.sounds').click(function(event) {
+						event.preventDefault();
+						$('.audio').trigger('play');
+					});
+					$('a.correct').click(function(event) {
+						event.preventDefault();
+						$('div#game_section').html("<h2>Correct!</h2>");
+					});
+					$('a.wrong').click(function(event) {
+						event.preventDefault();
+						alert("Incorrect. Please try again!")
+					});
+				});
+			}
+		</script>
+	</head>
+	
+	<body>
+		<div id="wrapper">
+			<div id="game_section">
+				
+			</div>
+			
+			<div id="game_nav">
+				<a id="previous" href="#">Previous</a>
+				<a id="next" href="#">Next</a>
+				<a id="next_lesson" href="#">Next Lesson</a>
+			</div>
+		</div>
+	</body>
+</html>
